@@ -73,7 +73,11 @@ class Screen:
         self._show_text("Solutions", 200, 305)
         self.solve.set_problem(self.letters, self.start_pattern)
         solutions = self.solve.solve()
-        if solutions:
+        if not solutions:
+            self._show_text("No solutions found", 200, 405)
+        elif solutions[0] == "ERROR":
+            self._show_text("There seems to be an error in the grids - Please check", 200, 405)
+        else:
             x, y = 350, 350
             for sol in solutions:
                 solution_grid = grid.Grid(self.screen, 150, 5, x, y)
@@ -84,8 +88,6 @@ class Screen:
                 x += 205
                 if x >= 900:
                     x, y = 350, y + 205
-        else:
-            self._show_text("No solutions found", 200, 405)
 
     def _show_text(self, txt, x, y, col=BLACK, font=None):
         """ Print text on screen """
@@ -242,6 +244,7 @@ class Screen:
             self._clear_space()
         else:
             self._show_text("Complete", 520, 600)
+            self.problem()
 
     def _get_letters(self, x, y, default="", edit=False):
         """ Input letters into grid

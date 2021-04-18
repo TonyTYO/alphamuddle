@@ -54,9 +54,11 @@ class Solver:
         return self.solutions
 
     def try_grid(self):
-        """ Check for missing reflectd letters and start recursive search for solutions """
+        """ Check for missing reflected letters and start recursive search for solutions """
         self.init_grid, self.letters = self.check_diagonal(self.start_grid, self.letters)
-
+        if not self.letters:
+            self.solutions = ["ERROR"]
+            return
         solution = [row[:] for row in self.init_grid]
         self.traverse(0, self.letters, solution)
 
@@ -86,14 +88,17 @@ class Solver:
         """ Insert any missing reflected letters and remove from list
             of available letters """
         grid = grid[:]
-        for row in range(5):
-            for col in range(5):
-                if grid[row][col].isalpha() and grid[col][row] == "-":
-                    grid[col][row] = grid[row][col]
-                    letters.remove(grid[col][row])
-                elif grid[col][row].isalpha() and grid[row][col] == "-":
-                    grid[row][col] = grid[col][row]
-                    letters.remove(grid[row][col])
+        try:
+            for row in range(5):
+                for col in range(5):
+                    if grid[row][col].isalpha() and grid[col][row] == "-":
+                        grid[col][row] = grid[row][col]
+                        letters.remove(grid[col][row])
+                    elif grid[col][row].isalpha() and grid[row][col] == "-":
+                        grid[row][col] = grid[col][row]
+                        letters.remove(grid[row][col])
+        except ValueError:
+            letters.clear()
         return grid, letters
 
     def check_singles(self, row, word):
