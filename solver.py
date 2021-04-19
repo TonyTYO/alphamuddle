@@ -45,7 +45,8 @@ class Solver:
 
         used_letters = [let for patt in self.start_grid for let in patt if let.isalpha()]
         for let in used_letters:
-            self.letters.remove(let)
+            if let in self.letters:
+                self.letters.remove(let)
 
     def solve(self):
         """ Solve grid """
@@ -173,8 +174,6 @@ class Solver:
             new_list = list(lst)
             if char in new_list:
                 new_list.remove(char)
-            else:
-                new_list.remove(' ')
         return new_list
 
     @staticmethod
